@@ -4,8 +4,16 @@ public:
         if(n<1){
             return false;
         }
+        else if(n==1){
+            return true;
+        }
         else{
-            return (floor(log2(n)) == log2(n));
+            if(n%2 == 0){
+                return isPowerOfTwo(n/2);
+            }
+            else{
+                return false;
+            }
         }
     }
 };
