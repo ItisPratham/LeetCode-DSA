@@ -10,51 +10,51 @@
  */
 class Solution {
 private:
-    ListNode* reverse(ListNode* head){
+    ListNode* reversekNodes(ListNode* head, ListNode* end){
         ListNode* prev = NULL;
+        ListNode* curr = head;
         ListNode* next;
-        while(head != NULL){
-            next = head->next;
-            head->next = prev;
-            prev = head;
-            head = next;
+        while(curr != end){
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
         }
         return prev;
     }
+    ListNode* getkthNode(ListNode* start, int k){
+        while(start != NULL && k>1){
+            start = start->next;
+            k--;
+        }
+        return start;
+    }
 public:
     ListNode* reverseKGroup(ListNode* head, int k) {
-        if(head == NULL){
+        if(head == NULL || k<2){
             return head;
         }
-        int i = 0;
-        ListNode* temp = head;
-        ListNode* curr;
-        ListNode* prev;
-        ListNode* start = head;
-        while(temp!= NULL){
-            if((i+1)%k == 0){
-                curr = temp;
-                temp = temp->next;
-                curr->next = NULL;
-                curr = reverse(start);
-                if((i+1) == k){
-                    head = curr;
-                }
-                else{
-                    prev->next = curr;
-                }
-                start = temp;
-                while(curr->next != NULL){
-                    curr = curr->next;
-                }
-                prev = curr;
-                curr->next = temp;
+
+        ListNode* dummy = new ListNode(0);
+        dummy->next = head;
+        ListNode* prevGroupEnd = dummy;
+
+        while(true){
+            ListNode* groupStart = prevGroupEnd->next;
+            ListNode* groupEnd = getkthNode(groupStart, k);
+
+            if(groupEnd == NULL){
+                break;
             }
-            else{
-                temp = temp->next;
-            }
-            i++;
+
+            ListNode* nextGroupStart = groupEnd->next;
+            ListNode* reversedHead = reversekNodes(groupStart, nextGroupStart);
+
+            prevGroupEnd->next = reversedHead;
+            groupStart->next = nextGroupStart;
+
+            prevGroupEnd = groupStart;
         }
-        return head;
+        return dummy->next;
     }
 };
