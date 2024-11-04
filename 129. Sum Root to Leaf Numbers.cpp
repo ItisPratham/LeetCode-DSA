@@ -11,39 +11,27 @@
  */
 class Solution {
 private:
-    void findPaths(TreeNode* root, vector<vector<int>>& allPaths, vector<int>& currentPath){
+    void findPaths(TreeNode* root, int& sum, int current){
         if(!root){
             return;
         }
 
-        currentPath.push_back(root->val);
+        current = current*10 + root->val;
 
         if(!root->left && !root->right){
-            allPaths.push_back(currentPath);
+            sum += current;
         }
         else{
-            findPaths(root->left, allPaths, currentPath);
-            findPaths(root->right, allPaths, currentPath);
+            findPaths(root->left, sum, current);
+            findPaths(root->right, sum, current);
         }
 
-        currentPath.pop_back();
+        current = 0;
     }
 public:
     int sumNumbers(TreeNode* root) {
-        vector<vector<int>> allPaths;
-        vector<int> currentPath;
-        findPaths(root, allPaths, currentPath);
-        int sum = 0;
-
-        for(vector<int> element : allPaths){
-            int size = element.size();
-            int temp = 0;
-            for(int i = 0; i < size; i++){
-                temp += element[i]*pow(10, size-i-1);
-            }
-            sum += temp;
-        }
-
+        int sum = 0, current = 0;
+        findPaths(root, sum, current);
         return sum;
     }
 };
